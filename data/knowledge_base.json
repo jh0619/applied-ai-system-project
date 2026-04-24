@@ -1,0 +1,77 @@
+[
+  {
+    "id": "dog_exercise_general",
+    "topic": "dog exercise",
+    "content": "Adult dogs typically need 30 to 120 minutes of exercise per day depending on breed. High-energy breeds like Golden Retrievers, Border Collies, and Huskies often need 60 to 90 minutes of vigorous activity. Under-exercised dogs can develop destructive behaviors."
+  },
+  {
+    "id": "dog_feeding_schedule",
+    "topic": "dog feeding",
+    "content": "Most adult dogs do best with two meals per day, spaced about 8 to 12 hours apart. Puppies under 6 months need three to four smaller meals. Avoid strenuous exercise within one hour of feeding to reduce risk of bloat."
+  },
+  {
+    "id": "dog_grooming_baths",
+    "topic": "dog grooming",
+    "content": "Most dogs only need a bath every 4 to 8 weeks. Bathing too often strips natural oils and can cause dry skin. Brushing 2 to 3 times per week helps control shedding and distributes skin oils."
+  },
+  {
+    "id": "cat_feeding_schedule",
+    "topic": "cat feeding",
+    "content": "Cats are natural grazers and typically do best with two measured meals per day. Free-feeding dry food can lead to obesity. Wet food supports hydration, which is critical for urinary and kidney health."
+  },
+  {
+    "id": "cat_enrichment",
+    "topic": "cat enrichment",
+    "content": "Indoor cats need daily mental stimulation. Short play sessions of 10 to 15 minutes, twice a day, using wand toys mimic hunting behavior and reduce stress, anxiety, and destructive scratching."
+  },
+  {
+    "id": "cat_grooming",
+    "topic": "cat grooming",
+    "content": "Long-haired cats like Persians need daily brushing to prevent matting. Short-haired cats benefit from brushing once or twice a week. Regular grooming also reduces hairballs."
+  },
+  {
+    "id": "puppy_care",
+    "topic": "puppy care",
+    "content": "Puppies under one year need more frequent meals, short but frequent play sessions, and consistent potty breaks every 2 to 3 hours. Socialization between 8 and 16 weeks is critical for long-term behavior."
+  },
+  {
+    "id": "senior_pet_care",
+    "topic": "senior pet care",
+    "content": "Senior dogs and cats (age 7 and older) benefit from shorter, gentler exercise sessions and more frequent vet checkups. Joint-friendly activities like slow walks or gentle play are better than high-impact exercise."
+  },
+  {
+    "id": "heat_safety",
+    "topic": "heat safety",
+    "content": "Walk dogs in the early morning or evening when temperatures are cooler. Avoid midday walks in hot weather, especially on asphalt which can burn paw pads. Always provide fresh water."
+  },
+  {
+    "id": "cold_safety",
+    "topic": "cold safety",
+    "content": "Short-haired dogs and small breeds get cold quickly. Limit outdoor time in freezing weather, and consider a coat for breeds like greyhounds or chihuahuas. Wipe paws after walks to remove salt and de-icer."
+  },
+  {
+    "id": "dental_care",
+    "topic": "dental care",
+    "content": "Dental disease affects most pets by age 3. Brush your pet's teeth 2 to 3 times per week with pet-safe toothpaste. Dental chews and annual cleanings help prevent periodontal disease."
+  },
+  {
+    "id": "medication_timing",
+    "topic": "medication",
+    "content": "Give medications at the same time each day for consistency. Many pet medications work best when given with food to reduce stomach upset. Never skip doses without consulting a vet."
+  },
+  {
+    "id": "high_energy_breeds",
+    "topic": "high energy dogs",
+    "content": "High-energy breeds (Border Collies, Australian Shepherds, Huskies, working breeds) benefit from a mix of physical exercise and mental work like scent games, training sessions, or puzzle feeders. Pure physical exercise alone often isn't enough."
+  },
+  {
+    "id": "crate_training",
+    "topic": "crate training",
+    "content": "Crates provide a safe den-like space for dogs. Adult dogs should not be crated longer than 4 to 6 hours at a time. Never use the crate as punishment."
+  },
+  {
+    "id": "hydration",
+    "topic": "hydration",
+    "content": "Pets need constant access to fresh water. Dogs need about 1 ounce of water per pound of body weight per day. Cats often prefer moving water from a fountain, which encourages higher intake."
+  }
+]

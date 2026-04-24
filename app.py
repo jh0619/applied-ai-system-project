@@ -564,13 +564,25 @@ if st.button("Generate schedule"):
         with st.spinner("Asking Gemini to explain today's plan..."):
             try:
                 from plan_explainer import explain_plan_with_ai
-                ai_explanation = explain_plan_with_ai(
+                ai_explanation, knowledge_used = explain_plan_with_ai(
                     plan=generated_plan,
                     owner=st.session_state.owner,
                     task_pet_map=task_pet_map,
                 )
                 st.markdown("#### 🧠 AI Explanation")
                 st.info(ai_explanation)
+
+                if knowledge_used:
+                    with st.expander(
+                        f"📚 Knowledge sources used ({len(knowledge_used)})",
+                        expanded=False,
+                    ):
+                        for snippet in knowledge_used:
+                            st.markdown(
+                                f"**{snippet['topic']}** "
+                                f"(relevance: {snippet['score']})"
+                            )
+                            st.caption(snippet["content"])
             except AIClientError as exc:
                 st.warning(
                     f"AI explanation unavailable ({exc}). "
