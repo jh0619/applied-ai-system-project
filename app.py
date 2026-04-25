@@ -496,29 +496,48 @@ with tasks_tab:
             frequency_choice = st.selectbox("Frequency", ["none", "daily", "weekly"], index=0)
 
         if st.button("Add task manually"):
+            # Input validation
+            title_clean = task_title.strip()
+            category_clean = category.strip()
+            errors = []
+            if not title_clean:
+                errors.append("Task title cannot be empty.")
+            if not category_clean:
+                errors.append("Category cannot be empty.")
+            if int(duration) < 1:
+                errors.append("Duration must be at least 1 minute.")
+
+            if errors:
+                for err in errors:
+                    st.warning(f"⚠️ {err}")
+                st.stop()
             new_task = Task(
-                title=task_title,
+                title=title_clean,
                 duration=int(duration),
                 priority=priority,
-                category=category,
+                category=category_clean,
                 time=format_scheduled_datetime(task_date, task_time),
                 frequency="" if frequency_choice == "none" else frequency_choice,
             )
-            new_task_minutes = Scheduler._time_to_minutes(new_task.time)
-            conflicting_tasks = []
-            if new_task_minutes is not None:
-                for existing_task in st.session_state.owner.get_all_tasks():
-                    existing_minutes = Scheduler._time_to_minutes(existing_task.time)
-                    if existing_minutes is not None and existing_minutes == new_task_minutes:
-                        conflicting_tasks.append(existing_task)
+            # Use the scheduler's interval-aware conflict detection
+            provisional_tasks = list(st.session_state.owner.get_all_tasks()) + [new_task]
+            provisional_pet_map = dict(st.session_state.owner.get_task_pet_map())
+            provisional_pet_map[id(new_task)] = selected_pet.name
 
-            if conflicting_tasks:
-                pet_map = st.session_state.owner.get_task_pet_map()
-                details = ", ".join(
-                    f"{t.title} ({pet_map.get(id(t), 'Unknown Pet')})"
-                    for t in conflicting_tasks
-                )
-                st.warning(f"Time conflict at {new_task.time}: {details}")
+            conflict_warnings = st.session_state.scheduler.detect_time_conflicts(
+                tasks=provisional_tasks,
+                task_pet_map=provisional_pet_map,
+            )
+            # Only show conflicts that actually involve the new task
+            relevant_conflicts = [
+                w for w in conflict_warnings
+                if new_task.title in w
+            ]
+
+            if relevant_conflicts:
+                for w in relevant_conflicts:
+                    st.warning(w)
+                st.info("Task not added. Adjust the time or duration to avoid the conflict.")
             else:
                 selected_pet.tasks.append(new_task)
                 st.session_state.scheduler.add_task(new_task)

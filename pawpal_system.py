@@ -296,15 +296,20 @@ class Scheduler:
         tasks: list[Task] | None = None,
         task_pet_map: dict[int, str] | None = None,
     ) -> list[str]:
-        """Detect same-time task conflicts and return warning messages.
+        """Detect overlapping task time intervals and return warnings.
 
-        This method is intentionally lightweight: it never raises for bad input
-        and returns human-readable warnings instead.
+        A conflict occurs when two tasks' [start, start+duration) windows
+        overlap on the same calendar day. This catches both identical
+        start times AND partial overlaps (e.g. 9:00-9:30 vs 9:20-9:40).
+
+        This method is intentionally lightweight: it never raises for bad
+        input and returns human-readable warnings instead.
         """
         warnings: list[str] = []
         tasks_to_check = tasks or self.generated_plan or self.tasks
-        grouped_tasks: dict[tuple[int, int], list[Task]] = {}
 
+        # Build (day_key, start_min, end_min, task) records.
+        timed_records: list[tuple[int, int, int, Task]] = []
         for task in tasks_to_check:
             sort_key = self._time_sort_key(task.time)
             if sort_key is None:
@@ -314,45 +319,60 @@ class Scheduler:
                         f"'{task.time}' for '{task.title}'."
                     )
                 continue
+            day_key, start_min = sort_key
+            duration = max(int(task.duration or 0), 0)
+            end_min = start_min + duration
+            timed_records.append((day_key, start_min, end_min, task))
 
-            grouped_tasks.setdefault(sort_key, []).append(task)
+        # Sort by day then start time so we only need to compare adjacent
+        # tasks within the same day for overlap.
+        timed_records.sort(key=lambda r: (r[0], r[1], r[2]))
 
-        for conflicted_tasks in grouped_tasks.values():
-            if len(conflicted_tasks) < 2:
-                continue
-
-            time_label = conflicted_tasks[0].time
-
-            if task_pet_map:
-                pet_names = [
-                    task_pet_map.get(id(task), "Unknown Pet")
-                    for task in conflicted_tasks
-                ]
-                conflict_scope = (
-                    "same pet"
-                    if len(set(pet_names)) == 1
-                    else "different pets"
-                )
-                details = ", ".join(
-                    (
-                        f"{task.title} "
-                        f"({task_pet_map.get(id(task), 'Unknown Pet')})"
-                    )
-                    for task in conflicted_tasks
-                )
+        # Pairwise overlap check: two intervals overlap iff
+        # start_a < end_b AND start_b < end_a (on the same day).
+        seen_pairs: set[tuple[int, int]] = set()
+        for i, rec_a in enumerate(timed_records):
+            day_a, start_a, end_a, task_a = rec_a
+            for j in range(i + 1, len(timed_records)):
+                day_b, start_b, end_b, task_b = timed_records[j]
+                if day_b != day_a:
+                    break  # Different day; sorted, so no further overlaps.
+                if start_b >= end_a:
+                    break  # No more overlaps possible on this day.
+                # Overlap detected.
+                pair_key = tuple(sorted((id(task_a), id(task_b))))
+                if pair_key in seen_pairs:
+                    continue
+                seen_pairs.add(pair_key)
                 warnings.append(
-                    f"Warning: Time conflict at {time_label} "
-                    f"({conflict_scope}): {details}."
-                )
-            else:
-                task_titles = ", ".join(
-                    task.title for task in conflicted_tasks
-                )
-                warnings.append(
-                    f"Warning: Time conflict at {time_label}: {task_titles}."
+                    self._format_conflict_message(task_a, task_b, task_pet_map)
                 )
 
         return warnings
+
+    @staticmethod
+    def _format_conflict_message(
+        task_a: Task,
+        task_b: Task,
+        task_pet_map: dict[int, str] | None,
+    ) -> str:
+        """Build a friendly conflict warning message for two overlapping tasks."""
+        if task_pet_map:
+            pet_a = task_pet_map.get(id(task_a), "Unknown Pet")
+            pet_b = task_pet_map.get(id(task_b), "Unknown Pet")
+            scope = "same pet" if pet_a == pet_b else "different pets"
+            return (
+                f"Warning: Time conflict ({scope}) — "
+                f"'{task_a.title}' ({pet_a}) at {task_a.time} for {task_a.duration} min "
+                f"overlaps with "
+                f"'{task_b.title}' ({pet_b}) at {task_b.time} for {task_b.duration} min."
+            )
+        return (
+            f"Warning: Time conflict — "
+            f"'{task_a.title}' at {task_a.time} for {task_a.duration} min "
+            f"overlaps with "
+            f"'{task_b.title}' at {task_b.time} for {task_b.duration} min."
+        )
 
     def generate_plan(
         self,
