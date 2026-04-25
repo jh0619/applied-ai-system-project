@@ -203,3 +203,7 @@ Validating user input alone isn't enough; constraining the LLM with prompt rules
 I built this with extensive AI assistance. The AI was excellent at generating boilerplate (CSS, prompt templates, mock-based tests) and refactoring patterns. It struggled with codebase-wide context — multiple times it suggested fixes that worked in isolation but broke other tests, requiring careful integration. The lesson: AI is a brilliant pair programmer, but the system architect still has to be human.
 
 ---
+
+## 🎥 Demo Walkthrough
+
+📹 [Loom video walkthrough](https://www.loom.com/share/your-link-here)
