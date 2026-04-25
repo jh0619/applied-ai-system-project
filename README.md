@@ -55,7 +55,7 @@ The deliberate two-layer design â€” **TF-IDF for recall + LLM for precision** â€
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/applied-ai-system-project.git
+git clone https://github.com/jh0619/applied-ai-system-project.git
 cd applied-ai-system-project
 
 # 2. Create and activate a virtual environment
