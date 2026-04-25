@@ -715,7 +715,9 @@ with tasks_tab:
                 st.success("Task removed.")
                 st.rerun()
     else:
-        st.info("No tasks yet. Add one above — with AI or manually!")
+        # Don't show empty-state hint while user is reviewing AI-parsed tasks
+        if not st.session_state.get("ai_parsed_tasks"):
+            st.info("No tasks yet. Add one above — with AI or manually!")
 
 # ---- Tab: Add new pet ----
 with add_tab:
