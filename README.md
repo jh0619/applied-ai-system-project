@@ -206,4 +206,4 @@ I built this with extensive AI assistance. The AI was excellent at generating bo
 
 ## 🎥 Demo Walkthrough
 
-📹 [Loom video walkthrough](https://www.loom.com/share/your-link-here)
+📹 [Loom video walkthrough](https://www.loom.com/share/87a9022873e94c7abbbed4e6c6c3db7a)
